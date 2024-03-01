@@ -41,3 +41,10 @@ ___
 * [mockup-management-system](https://github.com/mspano-web/mockup-management-system)
 
 ___
+
+## Documentacion de soporte / Support documentation
+
+* [Socket.io Oficial Page](https://socket.io/)
+
+* [Application Design](https://drive.google.com/file/d/1sv5Jbn6PYA_NPV6hH7ll2eVHpI6vaboy/view?usp=drive_link)
+* [Overview](https://drive.google.com/file/d/103y9K94H5jsIjayl8E0OSFmuJDEUYHgu/view?usp=drive_link) 
