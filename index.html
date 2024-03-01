@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO mockup terminal</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .error-message {
+            color: red;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="error-message" class="error-message"></div>
+
+    <div id="terminal-input">
+        <form id="form">
+            <label for="terminal">Terminal:</label>
+            <input type="text" id="terminal" name="terminal">
+            <button type="submit">INICIAR</button>
+        </form>
+    </div>
+
+    <div id="tables" style="display:none;">
+        <h2>Departure</h2>
+        <table id="departure-table">
+            <thead>
+                <tr>
+                    <th>CODE</th>
+                    <th>TIME</th>
+                    <th>POINT</th>
+                    <th>LOCATION</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="departure-body">
+            </tbody>
+        </table>
+        <h2>Arrival</h2>
+        <table id="arrival-table">
+            <thead>
+                <tr>
+                    <th>CODE</th>
+                    <th>TIME</th>
+                    <th>POINT</th>
+                    <th>LOCATION</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="arrival-body">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="./node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            var socket = io("ws://localhost:5000", {'forceNew': true});
+            var terminalInput = document.getElementById('terminal');
+            var errorMessage = document.getElementById('error-message');
+            var terminalDiv = document.getElementById('terminal-input');
+            var tablesDiv = document.getElementById('tables');
+            var departureTable = document.getElementById('departure-body');
+            var arrivalTable = document.getElementById('arrival-body');
+
+            terminalDiv.style.display = 'block';
+
+            socket.on('terminal-activation', function(data) {
+                var parsedData = JSON.parse(data);
+                console.log("terminal-activation")
+                console.log("data:", parsedData)
+                if (parsedData.codigoError) {
+                    showError(parsedData.mensajeError);
+                    return;
+                }
+                terminalDiv.style.display = 'none';
+                tablesDiv.style.display = 'block';
+                displayList(parsedData.departure, departureTable);
+                displayList(parsedData.arrival, arrivalTable);
+            });
+
+            socket.on('updated-list', function(data) {
+                console.log("updated-list")
+                var parsedData = JSON.parse(data);
+                console.log("data: (", parsedData, ")")
+                displayList(parsedData.departure, departureTable);
+                displayList(parsedData.arrival, arrivalTable);
+            });
+
+
+            socket.on('disconnect', function() {
+                console.log("disconnect")
+                showError('Disconnected from server');
+            });
+
+            socket.io.on("reconnection_attempt", function (attemptNumber) {
+                console.log("reconnection_attempt")
+                showError('Reconnection attempt #' + attemptNumber);
+            });
+
+            socket.on("connect_error", () => {
+                console.log("Connect error")
+                showError('Connect error');
+            });
+
+            socket.io.on("reconnect", function () {
+                console.log("reconnect")
+                showError('Reconnected');
+                socket.emit('terminal-activation', {
+                    terminal: terminalInput.value
+                });
+            });
+
+            function displayList(list, table) {
+table.innerHTML = '';
+                if (list) {
+                    list.forEach(function(item) {
+                        var row = table.insertRow();
+                        row.insertCell(0).textContent = item.code;
+                        row.insertCell(1).textContent = item.time;
+                        row.insertCell(2).textContent = item.point;
+                        row.insertCell(3).textContent = item.location;
+                        row.insertCell(4).textContent = item.status;
+                    });
+                }
+            }
+
+            function showError(message) {
+                console.log("showError message:", message)
+                errorMessage.textContent = message;
+                setTimeout(() => {
+                    errorMessage.textContent = '';
+                }, 10000);
+            }
+
+            var form = document.getElementById('form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                socket.emit('terminal-activation', {
+                    terminal: terminalInput.value
+                });
+            });
+        });
+    </script>
+</body>
+</html>
