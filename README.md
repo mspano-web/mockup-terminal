@@ -5,7 +5,7 @@ En particular, este proyecto contiene el modulo denominado mockup-terminal
 Complementariamente se crearon los proyectos mockup-management-system y departure-arrival-board, los cuales son compartidos y referenciados mas adelante en este documento.
 Es totalmente gratuito y compartido como un aporte a la comunidad. 
 Se focalizará en la comunicacion entre procesos mediante el uso de la libreria Socket.io
-Se utilizara como base la tecnologia Node JS y el lenguaje Typescript.
+Se utilizara como base las tecnologias HTML, JS y CSS.
 Se apoya en videos que seran publicados en el canal de youtube:  [Developer Web MS](https://www.youtube.com/@developerwebms/playlists)
 (en breve se estara publicando)
 ___
@@ -15,7 +15,7 @@ In particular, this project contains the module called mockup-terminal.
 Additionally, the mockup-management-system and departure-arrival-board projects were created, which are shared and referenced later in this document.
 It is completely free and shared as a contribution to the community. 
 It will focus on communication between processes through the use of the Socket.io library
-Node JS technology and the Typescript language will be used as a base.
+HTML, JS y CSS will be used as a base.
 It is supported by videos that will be published on the YouTube channel: [Developer Web MS](https://www.youtube.com/@developerwebms/playlists)
 (will be published soon)
 ___
